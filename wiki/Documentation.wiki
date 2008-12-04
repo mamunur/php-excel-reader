@@ -1,0 +1,91 @@
+#summary PHP Excel Reader Documentation
+
+= Example Usage =
+
+{{{
+Example Usage:
+
+$data = new Spreadsheet_Excel_Reader("test.xls");
+
+Retrieve formatted value of cell (first or only sheet):
+
+  $data->val($row,$col)
+
+Or using column names:
+
+  $data->val(10,'AZ')
+
+From a sheet other than the first:
+
+  $data->val($row,$col,$sheet_index)
+
+Retrieve cell info:
+
+  $data->type($row,$col);
+  $data->raw($row,$col);
+  $data->format($row,$col);
+  $data->formatIndex($row,$col);
+
+Get sheet size:
+
+  $data->rowcount();
+  $data->colcount();
+
+$data->sheets[0]['cells'][$i][$j] - data from $i-row $j-column
+
+$data->sheets[0]['numRows'] - count rows
+$data->sheets[0]['numCols'] - count columns
+
+$data->sheets[0]['cellsInfo'][$i][$j] - extended info about cell
+$data->sheets[0]['cellsInfo'][$i][$j]['type'] = "date" | "number" | "unknown"
+$data->sheets[0]['cellsInfo'][$i][$j]['raw'] = value if cell without format
+$data->sheets[0]['cellsInfo'][$i][$j]['format'] = Excel-style Format string of cell
+$data->sheets[0]['cellsInfo'][$i][$j]['formatIndex'] = The internal Excel index of format
+
+$data->sheets[0]['cellsInfo'][$i][$j]['colspan']
+$data->sheets[0]['cellsInfo'][$i][$j]['rowspan']
+}}}
+
+= License And History =
+
+{{{
+/**
+ * A class for reading Microsoft Excel Spreadsheets.
+ *
+ * Version 2.0
+ *
+ * Enhanced by Matt Kruse < http://mattkruse.com >
+ * Maintained at http://code.google.com/p/php-excel-reader/
+ *
+ * Originally developed by Vadim Tkachenko under the name PHPExcelReader.
+ * (http://sourceforge.net/projects/phpexcelreader)
+ * Based on the Java version by Andy Khan (http://www.andykhan.com).  Now
+ * maintained by David Sanders.  Reads only Biff 7 and Biff 8 formats.
+ *
+ * PHP versions 4 and 5
+ *
+ * LICENSE: This source file is subject to version 3.0 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Spreadsheet
+ * @package	Spreadsheet_Excel_Reader
+ * @author	 Vadim Tkachenko <vt@apachephp.com>
+ * @license	http://www.php.net/license/3_0.txt  PHP License 3.0
+ * @version	CVS: $Id: reader.php 19 2007-03-13 12:42:41Z shangxiao $
+ * @link	   http://pear.php.net/package/Spreadsheet_Excel_Reader
+ * @see		OLE, Spreadsheet_Excel_Writer
+ */
+}}}
+
+
+= Screenshot =
+
+===Microsoft Excel===
+<img src="http://mattkruse.com/excelreader/screenshot_xls.png">
+<br>
+
+===HTML Output===
+<img src="http://mattkruse.com/excelreader/screenshot_html.png">
