@@ -1,6 +1,31 @@
 #summary PHP Excel Reader Documentation
 
-= Example Usage =
+= Example =
+
+===Microsoft Excel===
+<img src="http://mattkruse.com/excelreader/screenshot_xls.png">
+<br>
+{{{
+<?php
+require_once 'excel_reader2.php';
+$xls = new Spreadsheet_Excel_Reader("example.xls");
+
+echo '<table border="1">';
+  for ($row=1;$row<=$xls->rowcount();$row++) {
+  echo '<tr>';
+  for ($col=1;$col<=$xls->colcount();$col++) {
+    echo '<td>' . $xls->val($row,$col) . '&nbsp;</td>';
+  }
+  echo '</tr>';
+}
+echo '</table>';
+?>
+}}}
+
+===HTML Output===
+<img src="http://mattkruse.com/excelreader/screenshot_html.png">
+
+= Usage =
 
 {{{
 Example Usage:
@@ -80,12 +105,3 @@ $data->sheets[0]['cellsInfo'][$i][$j]['rowspan']
  */
 }}}
 
-
-= Screenshot =
-
-===Microsoft Excel===
-<img src="http://mattkruse.com/excelreader/screenshot_xls.png">
-<br>
-
-===HTML Output===
-<img src="http://mattkruse.com/excelreader/screenshot_html.png">
