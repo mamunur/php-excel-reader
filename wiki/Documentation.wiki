@@ -1,5 +1,9 @@
 #summary PHP Excel Reader Documentation
 
+This PHP library expands on the great work done in the PHP Excel Reader project on SourceForge.
+
+It reads the binary format of XLS files directly and can return values and formats from any cell.
+
 = Example =
 
 ===Microsoft Excel===
@@ -104,4 +108,3 @@ $data->sheets[0]['cellsInfo'][$i][$j]['rowspan']
  * @see		OLE, Spreadsheet_Excel_Writer
  */
 }}}
-
