@@ -36,6 +36,9 @@ Example Usage:
 
 $data = new Spreadsheet_Excel_Reader("test.xls");
 
+Or conserve memory for large worksheets by not storing the extended 'cellsInfo':
+ $data = new Spreadsheet_Excel_Reader("test.xls",false);
+
 Retrieve formatted value of cell (first or only sheet):
 
   $data->val($row,$col)
@@ -81,7 +84,7 @@ $data->sheets[0]['cellsInfo'][$i][$j]['rowspan']
 /**
  * A class for reading Microsoft Excel Spreadsheets.
  *
- * Version 2.0
+ * Version 2.1
  *
  * Enhanced by Matt Kruse < http://mattkruse.com >
  * Maintained at http://code.google.com/p/php-excel-reader/
