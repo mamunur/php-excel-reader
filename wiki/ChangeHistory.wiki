@@ -10,6 +10,8 @@
   * Added dump() method to easily output HTML table
   * Fixed date handling problems due to time zones
   * Added css() method to generate CSS string for cell formatting
+  * Rearranged internal data storage
+  * Default encoding may now be passed in as third parameter in constructor
 
 = Version 2.11 / 2009-01-27 =
 
