@@ -12,6 +12,7 @@
   * Added css() method to generate CSS string for cell formatting
   * Rearranged internal data storage
   * Default encoding may now be passed in as third parameter in constructor
+  * New improved example XLS file and example PHP
 
 = Version 2.11 / 2009-01-27 =
 
