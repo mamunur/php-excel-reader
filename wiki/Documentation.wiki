@@ -1,119 +1,127 @@
-#summary PHP Excel Reader Documentation
+= Creating The Reader Object =
 
-This PHP library expands on the great work done in the PHP Excel Reader project on SourceForge.
+ {{{$data = new Spreadsheet_Excel_Reader("test.xls");}}}
 
-It reads the binary format of XLS files directly and can return values and formats from any cell.
+Or conserve memory for large worksheets by not storing the extended information about cells like fonts, colors, etc.
 
-= Example =
+ {{{$data = new Spreadsheet_Excel_Reader("test.xls",false);}}}
 
-===Microsoft Excel===
-<img src="http://mattkruse.com/excelreader/screenshot_xls.png">
-<br>
-{{{
-<?php
-require_once 'excel_reader2.php';
-$xls = new Spreadsheet_Excel_Reader("example.xls");
+To use a coding other than UTF-8 (default) you can pass it as the 3rd parameter.
 
-echo '<table border="1">';
-  for ($row=1;$row<=$xls->rowcount();$row++) {
-  echo '<tr>';
-  for ($col=1;$col<=$xls->colcount();$col++) {
-    echo '<td>' . $xls->val($row,$col) . '&nbsp;</td>';
-  }
-  echo '</tr>';
-}
-echo '</table>';
-?>
-}}}
+ {{{$data = new Spreadsheet_Excel_Reader("test.xls",true,"UTF-16");}}}
 
-===HTML Output===
-<img src="http://mattkruse.com/excelreader/screenshot_html.png">
+= Dumping Worksheet Contents =
 
-= Usage =
+The simplest way to interact with an XLS file is to just dump it to HTML for display in a browser. This method will generate a table with inline CSS and all available formatting.
 
-{{{
-Example Usage:
+ {{{$data->dump($row_numbers=false,$col_letters=false,$sheet=0,$table_class='excel')}}}
+ 
+= Accessing Cell Values =
 
-$data = new Spreadsheet_Excel_Reader("test.xls");
+It is recommended that the public API functions be used to access data rather than relying on the underlying data structure, which may change between releases.
 
-Or conserve memory for large worksheets by not storing the extended 'cellsInfo':
- $data = new Spreadsheet_Excel_Reader("test.xls",false);
+Retrieve the formatted value of a cell (what is displayed by Excel) on the first (or only) worksheet:
 
-Retrieve formatted value of cell (first or only sheet):
+ {{{$data->val($row,$col)}}}
 
-  $data->val($row,$col)
+You can also use column names rather than numbers:
 
-Or using column names:
+ {{{$data->val(10,'AZ')}}}
 
-  $data->val(10,'AZ')
+Access data on a different sheet:
 
-From a sheet other than the first:
+ {{{$data->val($row,$col,$sheet_index)}}}
 
-  $data->val($row,$col,$sheet_index)
+= Sheet Info =
 
-Retrieve cell info:
+Get the count of how many rows/cols are on a sheet (default: first sheet):
 
-  $data->type($row,$col);
-  $data->raw($row,$col);
-  $data->format($row,$col);
-  $data->formatIndex($row,$col);
+ {{{$data->rowcount($sheet_index=0)}}}
+ {{{$data->colcount($sheet_index=0)}}}
+ 
+= Cell Info =
+ 
+The type of data in the cell: number|date|unknown
+ 
+ {{{$data->type($row,$col,$sheet=0)}}}
+ 
+The raw data stored for the cell. For example, a cell may contain 123.456 but display as 123.5 because of the cell's format. Raw accesses the underlying value.
+ 
+ {{{$data->raw($row,$col,$sheet=0)}}}
 
-Get sheet size:
+If the cell has a hyperlink associated with it, the url can be retrieved.
 
-  $data->rowcount();
-  $data->colcount();
+ {{{$data->hyperlink($row,$col,$sheet=0)}}}
+ 
+Rowspan/Colspan of the cell.
+ 
+ {{{$data->rowspan($row,$col,$sheet=0)}}}
+ {{{$data->colspan($row,$col,$sheet=0)}}}
+ 
+= Formatting Details =
+ 
+The *style* method retrieves all available formatting information and returns a CSS string with all attributes.
 
-$data->sheets[0]['cells'][$i][$j] - data from $i-row $j-column
+ {{{$data->style($row,$col,$sheet=0)}}}
+ 
+The format string for the cell.
 
-$data->sheets[0]['numRows'] - count rows
-$data->sheets[0]['numCols'] - count columns
+ {{{$data->format($row,$col,$sheet=0)}}}
+ 
+Cell alignment. Either 'right', 'center', or '' (left)
 
-$data->sheets[0]['cellsInfo'][$i][$j] - extended info about cell
-$data->sheets[0]['cellsInfo'][$i][$j]['type'] = "date" | "number" | "unknown"
-$data->sheets[0]['cellsInfo'][$i][$j]['raw'] = value if cell without format
-$data->sheets[0]['cellsInfo'][$i][$j]['format'] = Excel-style Format string of cell
-$data->sheets[0]['cellsInfo'][$i][$j]['formatIndex'] = The internal Excel index of format
+ {{{$data->align($row,$col,$sheet=0)}}}
+ 
+Background color, in #FFFFFF format.
 
-$data->sheets[0]['cellsInfo'][$i][$j]['colspan']
-$data->sheets[0]['cellsInfo'][$i][$j]['rowspan']
-}}}
+ {{{$data->bgColor($row,$col,$sheet=0)}}}
 
-= License And History =
+Get border type for any of the cell's sides. Possible return values are:
+  * Thin
+  * Medium
+  * Dashed
+  * Dotted
+  * Thick
+  * Double
+  * Hair
+  * Medium dashed
+  * Thin dash-dotted
+  * Medium dash-dotted
+  * Thin dash-dot-dotted
+  * Medium dash-dot-dotted
+  * Slanted medium dash-dotted
 
-{{{
-/**
- * A class for reading Microsoft Excel Spreadsheets.
- *
- * Version 2.11
- *
- * Enhanced by Matt Kruse < http://mattkruse.com >
- * Maintained at http://code.google.com/p/php-excel-reader/
- *
- * Originally developed by Vadim Tkachenko under the name PHPExcelReader.
- * (http://sourceforge.net/projects/phpexcelreader)
- * Based on the Java version by Andy Khan (http://www.andykhan.com).  Now
- * maintained by David Sanders.  Reads only Biff 7 and Biff 8 formats.
- *
- * PHP versions 4 and 5
- *
- * LICENSE: This source file is subject to version 3.0 of the PHP license
- * that is available through the world-wide-web at the following URI:
- * http://www.php.net/license/3_0.txt.  If you did not receive a copy of
- * the PHP License and are unable to obtain it through the web, please
- * send a note to license@php.net so we can mail you a copy immediately.
- *
- * @category   Spreadsheet
- * @package	Spreadsheet_Excel_Reader
- * @author	 Vadim Tkachenko <vt@apachephp.com>
- * @license	http://www.php.net/license/3_0.txt  PHP License 3.0
- * @version	CVS: $Id: reader.php 19 2007-03-13 12:42:41Z shangxiao $
- * @link	   http://pear.php.net/package/Spreadsheet_Excel_Reader
- * @see		OLE, Spreadsheet_Excel_Writer
- *
- * CHANGE LOG:
- * Version 2.1  - 2009-01-26 - Fixed date issues, introduced new constructor
- *                flag to ignore extended cell info.
- * Version 2.11 - 2009-01-27 - New constructor flag wasn't properly included
- *                in the previous release. Fixed now.
- */
-}}}
+ {{{$data->borderLeft($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderRight($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderTop($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderBottom($row,$col,$sheet=0)}}}
+ 
+Get the color of each of the borders, in #FFFFFF format.
+
+ {{{$data->borderLeftColor($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderRightColor($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderTopColor($row,$col,$sheet=0)}}}
+ 
+ {{{$data->borderBottomColor($row,$col,$sheet=0)}}}
+
+The font color, which may be determined either by cell properties or by format properties, in #FFFFFF format.
+
+ {{{$data->color($row,$col,$sheet=0)}}}
+ 
+Other font properties:
+
+ {{{$data->bold($row,$col,$sheet=0) // Boolean }}}
+ 
+ {{{$data->italic($row,$col,$sheet=0) // Boolean }}}
+ 
+ {{{$data->underline($row,$col,$sheet=0) // Boolean }}}
+ 
+ {{{$data->height($row,$col,$sheet=0) // Number in pixels }}}
+ 
+ {{{$data->font($row,$col,$sheet=0) // Font name }}}
+ 
