@@ -1,5 +1,10 @@
 #summary Change History
 
+= Version 2.21 / 2009-04-14 =
+
+  * Fixed problems with array_combine in PHP4
+  * Fixed warnings of undefined index
+
 = Version 2.2 / 2009-03-28 =
 
   * Parse alignment, bgcolor, font, style, rowspan/colspan, borders
